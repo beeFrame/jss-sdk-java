@@ -61,6 +61,7 @@ JCSRestService对象内部维护一组HTTP连接池，在不使用该对象之�
   service.putObject("bucketName", object);
 ```
   [BUG] 由于之前系统设计不周，当object设置key之后，在下载该object的时候，将会丢失文件的后缀名，建议不调用setKey方法，这时候object的key默认为文件名，如果需要设置object的key，建议在key最后面加上后缀名。该BUG将会尽快修复。
+
 下载数据
 ```java
   StorageObject object = service.getObject("bucketName", "objectKey");
