@@ -44,7 +44,7 @@ JCSRestService对象内部维护一组HTTP连接池，在不使用该对象之�
   StorageBucket bucket = new StorageBucket("bucketName");
   service.createBucket(bucket);
 ```
-删除一个Bucket,当Bucket中没有Object的时候，该Bucket才能被删除。
+删除Bucket,当Bucket中没有Object的时候，该Bucket才能被删除, 否则删除会失败。
 ```java
   service.deleteBucket(bucketName);
 ```
