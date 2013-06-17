@@ -62,13 +62,18 @@ service.bucket("bucketname").object("key").entity(new File("filename")).put();
 ```java
 service.bucket("bucketname").object("key").get().toFile(new File("/export/test.txt"));
 ```
+断点下载数据(Range GET)
+```java
+
+```
 上传流对象
 ```java
+File fp = new File("D:\\export\\test.txt");
 InputStream inStream = new FileInputStream(fp);
-service.bucket(bucketName).object(key).entity(fp.length(), inStream);//必须指定流的长度
+service.bucket("bucketName").object("key").entity(fp.length(), inStream).put();//必须指定流的长度
 inStream.close();
 ```
-获取 Object 的 Metadata
+获取Object信息与Metadata(HEAD Object)
 ```java
 StorageObject so = service.bucket("bucketname").object("key").head();
 String bucketName = so.getBucket(); // 获取bucketName
