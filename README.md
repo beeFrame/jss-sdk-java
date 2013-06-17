@@ -13,31 +13,31 @@
   4.  <b>高可用性</b>，通过软件智能调度实现自动故障恢复来保证系统的高可用性，同时采用群集系统，快速消除单点故障,在任何时候都能够保证系统正常使用，对外提供云存储服务。
 
 ##使用  
-  京东云存储服务Java SDK核心类为JCSRestService，开发者需通过该类提供的多种方法访问京东云存储服务。
-###构建JCSRestService对象
-  在使用JCSRestService之前，需要创建JCSCredentials对象，该对象必须包含用户的accessKey以及secertKey
+  京东云存储服务Java SDK核心类为JingdongStorageService，开发者需通过该类提供的多种方法访问京东云存储服务。
+###构建JingdongStorageService对象
+  在使用Credential之前，需要创建Credential对象，该对象必须包含用户的AccessKeyId以及SecertAccessKeyId
 ```java
-  JCSCredentials credentials = new JCSCredentials(accessKey, secretKey);
+  Credential credential = new Credential("AccessKeyId", "SecertAccessKeyId");
 ```
-  通过JCSCredentials对象来创建JCSRestService
+  通过Credential对象来创建JingdongStorageService
 ```java
-  JCSService service = new JCSRestService(credentials);
+ JingdongStorageService service = new JingdongStorageService(credential);
 ```
-JCSRestService对象内部维护一组HTTP连接池，在不使用该对象之前需要调用其shutdown方法关闭连接池，请注意，一旦调用shutdown方法，该对象就不能再次被使用，否则将会抛出异常。
+JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对象之前需要调用其shutdown方法关闭连接池，请注意，一旦调用shutdown方法，该对象就不能再次被使用，否则将会抛出异常。
 ```java
   service.shutdown();
 ```
 ###列出所有的Bucket
 ```java
-  StorageBucket[] buckets = service.listAllBuckets();
-  		for(StorageBucket bucket : buckets){
-				String name = bucket.getName();
-			}
+  List<Bucket> list = service.listBucket();
+  for(Bucket b:list) {
+  	System.out.println(b.getName());
+  }
 ```
 ###Bucket相关操作
 创建一个Bucket，请注意，京东云存储所有的Bucket都是全局唯一的，每个用户最多只能创建100个Bucket，每个Bucket在京东云存储系统中都是唯一的，不能创建2个相同名字的Bucket。
 ```java
-  service.createBucket("bucketName");
+  service.bucket("bucketname").create();
 ```
 或者
 ```java
