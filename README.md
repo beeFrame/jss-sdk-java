@@ -61,11 +61,37 @@ JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对
 ```
 获取 Object 的 Metadata
 ```java
-StorageObject so = jss.bucket("bucketname").object("key").head();
-String bucketName = so.getBucket(); // 获取bucketName
-long contentLength = so.getContentLength(); // 获取该key的大小
-String contentoType = so.getContentType(); // 获取流类型
-String md5 = so.getETag(); // 获取该key的MD5
-String lastModified = so.getLastModified(); // 获取该key的最后修改时间  
-Map<String, String> headers = so.getHeaders(); // 获取服务端返回的headers
+  StorageObject so = service.bucket("bucketname").object("key").head();
+  String bucketName = so.getBucket(); // 获取bucketName
+  long contentLength = so.getContentLength(); // 获取该key的大小
+  String contentoType = so.getContentType(); // 获取流类型
+  String md5 = so.getETag(); // 获取该key的MD5
+  String lastModified = so.getLastModified(); // 获取该key的最后修改时间  
+  Map<String, String> headers = so.getHeaders(); // 获取服务端返回的headers
+```
+获取 Object流对象
+```java
+  InputStream in=service.bucket("bucketname").object("key").get().getInputStream();//使用完成后，流需要手动关闭
+```
+删除 Object
+```java
+  service.bucket("bucketname").object("key").delete();
+```
+判断 Object 是否在 Bucket中
+```java
+  boolean exist = service.bucket("bucketname").object("key").exist();
+```
+获取 Bucket 下 Object 列表(默认返回前1000个)
+```java
+  ObjectListing oResult = jss.bucket("bucketname").listObject();
+  for (ObjectSummary okey : oResult.getObjectSummaries()) {
+      System.out.println("keyName:" + okey.getKey());
+  }
+```
+获取 Bucket 下 Object 列表(返回前n个)
+```java
+  ObjectListing oResult = jss.bucket("bucketname").maxKeys(n).listObject();
+  for (ObjectSummary okey : oResult.getObjectSummaries()) {
+      System.out.println("keyName:" + okey.getKey());
+  }
 ```
