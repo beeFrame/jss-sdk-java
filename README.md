@@ -155,7 +155,7 @@ try {
     } catch (StorageServerException e) {
 	e.printStackTrace();
     } catch (StorageClientException e) {
-        System.out.println("httpcode:"+e.getError().getHttpStatusCode());//获取http返回错误码
+    System.out.println("httpcode:"+e.getError().getHttpStatusCode());//获取http返回错误码
 	System.out.println("errormessage:"+e.getError().getMessage());//获取错误信息
 	System.out.println("resource:"+e.getError().getResource());//获取请求资源
 	System.out.println("requestId:"+e.getError().getRequestId());//获取请求ID	
