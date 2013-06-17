@@ -39,32 +39,19 @@ JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对
 ```java
   service.bucket("bucketname").create();
 ```
-或者
-```java
-  StorageBucket bucket = new StorageBucket("bucketName");
-  service.createBucket(bucket);
 ```
 删除Bucket,当Bucket中没有Object的时候，该Bucket才能被删除, 否则删除会失败。
 ```java
-  service.deleteBucket(bucketName);
-```
-或者
-```java
-  StorageBucket bucket = new StorageBucket("bucketName");
-  service.deleteBucket(bucket);
+  service.bucket("bucketname").delete();
 ```
 ###Object相关操作
 上传数据
 ```java
-  StorageObject object = new StorageObject(new File("/home/dengliang/file.tar"));
-  object.setKey("objectKey")
-  service.putObject("bucketName", object);
+  service.bucket("bucketname").object("key").entity(new File("filename")).put();
 ```
-  [BUG] 由于之前系统设计不周，当object设置key之后，在下载该object的时候，将会丢失文件的后缀名，建议不调用setKey方法，这时候object的key默认为文件名，如果需要设置object的key，建议在key最后面加上后缀名。该BUG将会尽快修复。
 
 下载数据
 ```java
-  StorageObject object = service.getObject("bucketName", "objectKey");
-  DownloadPackage downloadPackage = new DownloadPackage(object, new File("/home/dengliang/file.tar"));
-  downloadPackage.execute();
+  service.bucket("bucketname").object("key").get().toFile(new File("/export/test.txt"));
+
 ```
