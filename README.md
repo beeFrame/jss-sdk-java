@@ -38,7 +38,7 @@ jss.shutdown();
 ```
 ###列出所有的Bucket
 ```java
-List<Bucket> buckets = service.listBucket();
+List<Bucket> buckets = jss.listBucket();
 for(Bucket bucket:buckets) {
    System.out.println("bucketName:"+bucket.getName());
 }
@@ -117,7 +117,7 @@ boolean hasNext = objectList.hasNext();
 ```java
 ObjectListing objectListTmp = jss.bucket("bucketname").maxKeys(586).listObject();
 List<ObjectSummary> listtmp = objectListTmp.getObjectSummaries();
-if (oResult.hasNext()) {
+if (objectListTmp.hasNext()) {
   String marker = listtmp.get(list.size()).getKey();
   List<ObjectSummary> objectList = jss.bucket("bucketname") .marker(marker).maxKeys(2000 - 586).listObject().getObjectSummaries();
   //遍历listResult即可得到第587~2000的key信息
