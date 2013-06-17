@@ -39,7 +39,6 @@ JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对
 ```java
   service.bucket("bucketname").create();
 ```
-```
 删除Bucket,当Bucket中没有Object的时候，该Bucket才能被删除, 否则删除会失败。
 ```java
   service.bucket("bucketname").delete();
@@ -53,5 +52,20 @@ JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对
 下载数据
 ```java
   service.bucket("bucketname").object("key").get().toFile(new File("/export/test.txt"));
-
+```
+上传流对象
+```java
+  InputStream inStream = new FileInputStream(fp);
+  service.bucket(bucketName).object(key).entity(fp.length(), inStream);//必须指定流的长度
+  inStream.close();
+```
+获取 Object 的 Metadata
+```java
+StorageObject so = jss.bucket("bucketname").object("key").head();
+String bucketName = so.getBucket(); // 获取bucketName
+long contentLength = so.getContentLength(); // 获取该key的大小
+String contentoType = so.getContentType(); // 获取流类型
+String md5 = so.getETag(); // 获取该key的MD5
+String lastModified = so.getLastModified(); // 获取该key的最后修改时间  
+Map<String, String> headers = so.getHeaders(); // 获取服务端返回的headers
 ```
