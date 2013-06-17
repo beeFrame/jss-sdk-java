@@ -155,13 +155,14 @@ try {
     } catch (StorageServerException e) {
 	e.printStackTrace();
     } catch (StorageClientException e) {
-                System.out.println("httpcode:"+e.getError().getHttpStatusCode());//获取http返回错误码
-	        System.out.println("errormessage:"+e.getError().getMessage());//获取错误信息
-		System.out.println("resource:"+e.getError().getResource());//获取请求资源
-		System.out.println("requestId:"+e.getError().getRequestId());//获取请求ID
-	
+        System.out.println("httpcode:"+e.getError().getHttpStatusCode());//获取http返回错误码
+	System.out.println("errormessage:"+e.getError().getMessage());//获取错误信息
+	System.out.println("resource:"+e.getError().getResource());//获取请求资源
+	System.out.println("requestId:"+e.getError().getRequestId());//获取请求ID	
     }
 
 ```
-
+###StorageServerException
+在访问云存储过程中，所有没有能够正常完成服务请求的操作，都会返回StoragerServerException该 Exception 是由 RuntimeException 派生而来，
+StoragerServerException所捕获的异常信息是由于京东云存储服务异常而导致的，为了不影响你的服务，建议立即联系京东云存储服务。
 
