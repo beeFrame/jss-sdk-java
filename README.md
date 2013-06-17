@@ -112,7 +112,7 @@ JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对
 ```
 获取 Bucket 下 Object 列表(返回该bucket下以“aaprefix”开头的key)
 ```java
-  ObjectListing objects = jss.bucket("bucketname").prefix("app").listObject();
+  ObjectListing objects = jss.bucket("bucketname").prefix("appprefix").listObject();
   for (ObjectSummary okey : objects.getObjectSummaries()) {
       System.out.println("keyName:" + okey.getKey());
   }
