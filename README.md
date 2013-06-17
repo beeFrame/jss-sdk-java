@@ -64,7 +64,8 @@ service.bucket("bucketname").object("key").get().toFile(new File("/export/test.t
 ```
 断点下载数据(Range GET)
 ```java
-
+service.bucket(bucketName).object(key).range(0, 3).get().toFile(new File("/export/test.key"));
+service.bucket(bucketName).object(key).range(4).get().toFile(new File("/export/test.key"),true);
 ```
 上传流对象
 ```java
@@ -95,36 +96,36 @@ service.bucket("bucketname").object("key").delete();
 ```java
 boolean exist = service.bucket("bucketname").object("key").exist();
 ```
-获取 Bucket 下 Object 列表(默认返回前1000个)
+获取 Bucket 下 Object 列表(默认返回前1000个,按照key做字典排序)
 ```java
 ObjectListing oResult = service.bucket("bucketname").listObject();
 for (ObjectSummary okey : oResult.getObjectSummaries()) {
     System.out.println("keyName:" + okey.getKey());
 }
 ```
-获取 Bucket 下 Object 列表(返回前n个)
+获取 Bucket 下 Object 列表(返回前n个,按照key做字典排序)
 ```java
 ObjectListing oResult = service.bucket("bucketname").maxKeys(n).listObject();
 for (ObjectSummary okey : oResult.getObjectSummaries()) {
     System.out.println("keyName:" + okey.getKey());
 }
 ```
-获取 Bucket 下 Object 列表(判断是否还有下一页)
+获取 Bucket 下 Object 列表(判断是否还有下一页,按照key做字典排序)
 ```java
 ObjectListing oResult = service.bucket("bucketname").listObject();
 boolean hasNext = oResult.hasNext();
 ```
-获取 Bucket 下 Object 列表(返回bucket下第587~20000的key)
+获取 Bucket 下 Object 列表(返回bucket下第587~20000的key,按照key做字典排序)
 ```java
 ObjectListing oResult = service.bucket("bucketname").maxKeys(586).listObject();
 List<ObjectSummary> list = oResult.getObjectSummaries();
 if (oResult.hasNext()) {
   String marker = list.get(list.size()).getKey();
-  List<ObjectSummary> listResult = service.bucket("bucketname") .marker(marker).maxKeys(20000 - 586).listObject().getObjectSummaries();
+  List<ObjectSummary> listResult = service.bucket("bucketname") .marker(marker).maxKeys(2000 - 586).listObject().getObjectSummaries();
   //遍历listResult即可得到第587~2000的key信息
   }
 ```
-获取 Bucket 下 Object 列表(返回该bucket下以“aaprefix”开头的key)
+获取 Bucket 下 Object 列表(返回该bucket下以“aaprefix”开头的key,按照key做字典排序)
 ```java
 ObjectListing objects = jss.bucket("bucketname").prefix("appprefix").listObject();
 for (ObjectSummary okey : objects.getObjectSummaries()) {
@@ -142,3 +143,25 @@ URI signatureUrl = jss.bucket("bucketname").object("key").generatePresignedUrl(5
 ```java
 http://storage.jcloud.com/bucketname/key?Expires=1371947369&AccessKey=dfa51215af4a47c086cbf77d1479c07d&Signature=F4vmVeqveYJwqCpuR8NZO6%2FIU7s%3D
 ```
+## Exception
+京东云存储的Exception包含StoragerClientException和StorageServerException
+###StoragerClientException
+在访问云存储过程中，所有没有能够正常完成服务请求的操作，都会返回StoragerClientException该 Exception 是由 RuntimeException 派生而来，StoragerClientException的对象中，
+并会得出以下由存储服务器获得到的错误返回的响应：error code， error message， error request id， error resource。例如在创建2次Bucket时候，我们执行的代码如下
+```java
+try {
+	jss.bucket("bucketname").create();
+	jss.bucket("bucketname").create();
+    } catch (StorageServerException e) {
+	e.printStackTrace();
+    } catch (StorageClientException e) {
+                System.out.println("httpcode:"+e.getError().getHttpStatusCode());//获取http返回错误码
+	        System.out.println("errormessage:"+e.getError().getMessage());//获取错误信息
+		System.out.println("resource:"+e.getError().getResource());//获取请求资源
+		System.out.println("requestId:"+e.getError().getRequestId());//获取请求ID
+	
+    }
+
+```
+
+
