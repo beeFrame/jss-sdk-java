@@ -83,15 +83,49 @@ JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对
 ```
 获取 Bucket 下 Object 列表(默认返回前1000个)
 ```java
-  ObjectListing oResult = jss.bucket("bucketname").listObject();
+  ObjectListing oResult = service.bucket("bucketname").listObject();
   for (ObjectSummary okey : oResult.getObjectSummaries()) {
       System.out.println("keyName:" + okey.getKey());
   }
 ```
 获取 Bucket 下 Object 列表(返回前n个)
 ```java
-  ObjectListing oResult = jss.bucket("bucketname").maxKeys(n).listObject();
+  ObjectListing oResult = service.bucket("bucketname").maxKeys(n).listObject();
   for (ObjectSummary okey : oResult.getObjectSummaries()) {
       System.out.println("keyName:" + okey.getKey());
   }
+```
+获取 Bucket 下 Object 列表(判断是否还有下一页)
+```java
+  ObjectListing oResult = service.bucket("bucketname").listObject();
+  boolean hasNext = oResult.hasNext();
+```
+获取 Bucket 下 Object 列表(返回bucket下第587~20000的key)
+```java
+  ObjectListing oResult = service.bucket("bucketname").maxKeys(586).listObject();
+  List<ObjectSummary> list = oResult.getObjectSummaries();
+  if (oResult.hasNext()) {
+  String marker = list.get(list.size()).getKey();
+	List<ObjectSummary> listResult = service.bucket("bucketname") .marker(marker).maxKeys(20000 - 586).listObject().getObjectSummaries();
+  //遍历listResult即可得到第587~2000的key信息
+  }
+```
+获取 Bucket 下 Object 列表(返回该bucket下以“aaprefix”开头的key)
+```java
+  ObjectListing objects = jss.bucket("bucketname").prefix("app").listObject();
+  for (ObjectSummary okey : objects.getObjectSummaries()) {
+      System.out.println("keyName:" + okey.getKey());
+  }
+```
+创建带预签名的URI
+京东云存储提供了一种基于查询字串(Query String)的认证方式，即通过预签名(Presigned)的方式，为要发布的Object生成一个带有认证信息的URI，并将它分发给第三方用户来实现公开访问。
+SDK中提供了PresigendURIBuilder来构造预签名URI。
+```java
+URI signatureUrl = jss.bucket("bucketname").object("key")
+.generatePresignedUrl(500000);
+// 产生一个链接,可以通过浏览器来下载该key，500000秒之后该链接就不能再次下载了
+```
+生成的URI如下：
+```java
+http://storage.jcloud.com/bucketname/key?Expires=1371947369&AccessKey=dfa51215af4a47c086cbf77d1479c07d&Signature=F4vmVeqveYJwqCpuR8NZO6%2FIU7s%3D
 ```
