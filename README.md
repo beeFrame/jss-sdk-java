@@ -116,9 +116,9 @@ boolean hasNext = objectList.hasNext();
 获取 Bucket 下 Object 列表(按照key做字典排序，返回bucket下第587~20000的key)
 ```java
 ObjectListing objectListTmp = jss.bucket("bucketname").maxKeys(586).listObject();
-List<ObjectSummary> listtmp = objectListTmp.getObjectSummaries();
+List<ObjectSummary> listTmp = objectListTmp.getObjectSummaries();
 if (objectListTmp.hasNext()) {
-  String marker = listtmp.get(list.size()-1).getKey();
+  String marker = listTmp.get(listTmp.size()-1).getKey();
   List<ObjectSummary> objectList = jss.bucket("bucketname") .marker(marker).maxKeys(2000 - 586).listObject().getObjectSummaries();
   //遍历objectList即可得到第587~2000的key信息
   }
