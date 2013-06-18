@@ -69,7 +69,7 @@ jss.bucket(bucketName).object(key).range(4).get().toFile(new File("/export/test.
 ```
 上传流对象
 ```java
-jss.bucket("bucketName").object("key").entity(fp.length(), inStream).put();//必须指定流的长度,并且流不为空
+jss.bucket("bucketName").object("key").entity(length, inStream).put();//必须指定流的长度,并且流不为空,length为流所在的文件大小
 inStream.close();
 ```
 获取Object信息与Metadata(HEAD Object)
