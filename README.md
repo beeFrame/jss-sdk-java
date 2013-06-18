@@ -135,7 +135,7 @@ for (ObjectSummary okey : objectList.getObjectSummaries()) {
 SDK中提供了PresigendURIBuilder来构造预签名URI。
 ```java
 URI signatureUrl = jss.bucket("bucketname").object("key").generatePresignedUrl(500000);
-  // 产生一个链接,可以通过浏览器来下载该key，500000秒之后该链接就不能再次下载了
+  // 产生一个链接,可以通过浏览器来下载该key，500000秒超时后，该链接不能下载
 ```
 生成的URI如下：
 ```java
