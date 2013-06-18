@@ -118,7 +118,7 @@ boolean hasNext = objectList.hasNext();
 ObjectListing objectListTmp = jss.bucket("bucketname").maxKeys(586).listObject();
 List<ObjectSummary> listtmp = objectListTmp.getObjectSummaries();
 if (objectListTmp.hasNext()) {
-  String marker = listtmp.get(list.size()).getKey();
+  String marker = listtmp.get(list.size()-1).getKey();
   List<ObjectSummary> objectList = jss.bucket("bucketname") .marker(marker).maxKeys(2000 - 586).listObject().getObjectSummaries();
   //遍历listResult即可得到第587~2000的key信息
   }
