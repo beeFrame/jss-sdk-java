@@ -120,7 +120,7 @@ List<ObjectSummary> listtmp = objectListTmp.getObjectSummaries();
 if (objectListTmp.hasNext()) {
   String marker = listtmp.get(list.size()-1).getKey();
   List<ObjectSummary> objectList = jss.bucket("bucketname") .marker(marker).maxKeys(2000 - 586).listObject().getObjectSummaries();
-  //遍历listResult即可得到第587~2000的key信息
+  //遍历objectList即可得到第587~2000的key信息
   }
 ```
 获取 Bucket 下 Object 列表(按照key做字典排序，返回该bucket下以“aaprefix”开头的key)
