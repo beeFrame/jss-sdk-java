@@ -158,4 +158,56 @@ try {
     }
 
 ```
+###完整代码示例
+```java
+package com.jd.sdkTest;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.List;
+import com.jcloud.jss.Credential;
+import com.jcloud.jss.JingdongStorageService;
+import com.jcloud.jss.domain.Bucket;
+import com.jcloud.jss.domain.ObjectListing;
+import com.jcloud.jss.domain.ObjectSummary;
+import com.jcloud.jss.exception.StorageClientException;
+import com.jcloud.jss.exception.StorageServerException;
+public class Test {
+	public static void main(String[] args) {
+		try {
+			String accesskey = "xxx";
+			String secertkey = "xxx";
+			String bucketName = "b1name";
+			String key = "key";
+			Credential credential = new Credential(accesskey, secertkey);
+			JingdongStorageService jss = new JingdongStorageService(credential);
+			jss.bucket(bucketName).create();//创建bucket
+			jss.bucket(bucketName).object(key)
+					.entity(new File("D:\\export\\test.txt")).put(); //上传key文件
+			URI uri=jss.bucket(bucketName).object(key).generatePresignedUrl(10000);
+			System.out.println("URL:"+uri.toURL());
+			ObjectListing  oResult = jss.bucket(bucketName).listObject();//列出该bucket下的所有key信息
+			for (ObjectSummary okey : oResult.getObjectSummaries()) {
+				System.out.println("keyName:" + okey.getKey());
+				jss.bucket(bucketName).object(okey.getKey()).delete();//删除该key的信息
+			}
+			boolean keyExist = jss.bucket(bucketName).object(key).exist();//判断key是否存在
+			System.out.println("Key exsit:" + keyExist);
+			List<Bucket> list = jss.listBucket();//列出所有的bucket信息
+			for (Bucket b : list) {
+				System.out.println("BucketName:" + b.getName());
+			}
+			jss.bucket(bucketName).delete();//删除bucket
+		} catch (StorageServerException e) {
+			e.printStackTrace();
+		} catch (StorageClientException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+}
+
+```
