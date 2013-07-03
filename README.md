@@ -18,7 +18,7 @@
 <dependency>
 	<groupId>com.jcloud</groupId>
 	<artifactId>jss-sdk-java</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 ##使用  
