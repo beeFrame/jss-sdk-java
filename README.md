@@ -154,7 +154,7 @@ http://storage.jcloud.com/bucketname/key?Expires=1371947369&AccessKey=dfa51215af
 
 初始化Multipart Upload
 ```java
-InitMultipartUploadResult initResult =jss.bucket(bucketName).object(key).initMultipartUpload();
+InitMultipartUploadResult initResult =jss.bucket("bucketName").object("key").initMultipartUpload();
 ```
 
 获得Multipart Upload Id
