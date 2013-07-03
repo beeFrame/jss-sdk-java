@@ -35,7 +35,7 @@ JingdongStorageService jss = new JingdongStorageService(credential);
   如果你是京东内部的用户，需要接入私有云云存储，则需要改变endpoint
 ```java
 ClientConfig config = new ClientConfig();
-config.setEndpoint("storage.jss.com");
+config.setEndpoint("storage.jd.com");
 JingdongStorageService jss = new JingdongStorageService(credential,config);
 ```
 JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对象之前需要调用其shutdown方法关闭连接池，请注意，一旦调用shutdown方法，该对象就不能再次被使用，否则将会抛出异常。
@@ -147,6 +147,50 @@ URI signatureUrl = jss.bucket("bucketname").object("key").generatePresignedUrl(5
 ```java
 http://storage.jcloud.com/bucketname/key?Expires=1371947369&AccessKey=dfa51215af4a47c086cbf77d1479c07d&Signature=F4vmVeqveYJwqCpuR8NZO6%2FIU7s%3D
 ```
+## Multipart Upload API
+开发这使用盛大云存储SDK上传文件时，SDK会透明的使用Multipart Upload实现对大文件上传，一般情况下用户不需要自己来使用Multipart Upload API。
+
+若开发者有自己使用Multipart Upload的需求，可以参看下面的使用样例：
+
+初始化Multipart Upload
+```java
+InitMultipartUploadResult initResult =jss.bucket(bucketName).object(key).initMultipartUpload();
+```
+
+获得Multipart Upload Id
+```java
+String uploadId=initResult.getUploadId();				
+```
+上传Part
+```java
+UploadPartResult upResult1=jss.bucket("bucketName").object("key").entity(new File("/tmp/part1.txt")).uploadPart(uploadId, 1);
+UploadPartResult upResult2=jss.bucket("bucketName").object("key").entity(new File("/tmp/part2.txt")).uploadPart(uploadId, 2);
+UploadPartResult upResult3=jss.bucket("bucketName").object("key").entity(new File("/tmp/part3.txt")).uploadPart(uploadId, 3);
+
+```
+
+完成Multipart Upload,完成分块上传后的key的内容是：以上3个文件内容的总和
+```java
+ArrayList<UploadPartResult>  uploadPartList = new  ArrayList<UploadPartResult>();
+uploadPartList.add(upResult1);
+uploadPartList.add(upResult2);
+uploadPartList.add(upResult3);
+jss.bucket("bucketName").object("key").completeMultipartUpload(uploadId, uploadPartList);
+```
+
+放弃Multipart Upload
+```java
+storage.bucket("mybucket").object("blob").multipartUpload(uploadId).abort();
+```
+
+列出未完成的Parts
+```java
+storage.bucket("mybucket").object("blob").multipartUpload(uploadId).
+	partNumberMarker(10).
+	maxParts(5).
+	listParts();
+```
+
 ## Exception
 在访问云存储过程中，所有没有能够正常完成服务请求的操作，都会返回StoragerClientException,该 Exception 是由 RuntimeException 派生而来，StoragerClientException的对象中，
 并会得出以下由存储服务器获得到的错误返回的响应：错误码，错误信息，请求资源，请求ID。例如在创建2次Bucket时候,代码如下
