@@ -148,7 +148,7 @@ URI signatureUrl = jss.bucket("bucketname").object("key").generatePresignedUrl(5
 http://storage.jcloud.com/bucketname/key?Expires=1371947369&AccessKey=dfa51215af4a47c086cbf77d1479c07d&Signature=F4vmVeqveYJwqCpuR8NZO6%2FIU7s%3D
 ```
 ## Multipart Upload API
-开发这使用盛大云存储SDK上传文件时，SDK会透明的使用Multipart Upload实现对大文件上传，一般情况下用户不需要自己来使用Multipart Upload API。
+开发这使用京东云存储SDK上传文件时，SDK会透明的使用Multipart Upload实现对大文件上传，一般情况下用户不需要自己来使用Multipart Upload API。
 
 若开发者有自己使用Multipart Upload的需求，可以参看下面的使用样例：
 
@@ -180,15 +180,22 @@ jss.bucket("bucketName").object("key").completeMultipartUpload(uploadId, uploadP
 
 放弃Multipart Upload
 ```java
-storage.bucket("mybucket").object("blob").multipartUpload(uploadId).abort();
+jss.bucket("bucketName").object("key").abortMultipartUpload(uploadId);
 ```
 
 列出未完成的Parts
 ```java
-storage.bucket("mybucket").object("blob").multipartUpload(uploadId).
-	partNumberMarker(10).
-	maxParts(5).
-	listParts();
+ListPartsResult partList =jss.bucket("bucketName").object("key").listParts(uploadId);
+for(Part part:partList.getParts()){
+      System.out.println("partNumber:"+part.getPartNumber());
+}
+```
+列出bucket正在使用分块上传的uploadId和key信息
+```java
+MultipartUploadListing multipartUploadList = jss.bucket("bucketName").listMultipartUploads();
+for(Upload upload:multipartUploadList.getUploads()) {
+    System.out.println("key:"+upload.getKey()+",uploadId:"+upload.getUploadId());
+}
 ```
 
 ## Exception
