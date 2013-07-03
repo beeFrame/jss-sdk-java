@@ -32,6 +32,12 @@ Credential credential = new Credential("AccessKeyId", "SecertAccessKeyId");
 ```java
 JingdongStorageService jss = new JingdongStorageService(credential);
 ```
+  如果你是京东内部的用户，需要接入私有云云存储，则需要改变endpoint
+```java
+ClientConfig config = new ClientConfig();
+config.setEndpoint("storage.jss.com");
+JingdongStorageService jss = new JingdongStorageService(credential,config);
+```
 JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对象之前需要调用其shutdown方法关闭连接池，请注意，一旦调用shutdown方法，该对象就不能再次被使用，否则将会抛出异常。
 ```java
 jss.shutdown();
