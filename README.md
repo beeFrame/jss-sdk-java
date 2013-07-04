@@ -171,7 +171,8 @@ InputStream is = new FileInputStream(fp);
 UploadPartResult upResult1=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 1);//上传该文件第0～5M数据
 UploadPartResult upResult2=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 2);//上传该文件第5M～10M的数据
 UploadPartResult upResult3=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 3);//上传该文件第10M～15M的数据
-UploadPartResult upResult4=jss.bucket("bucketName").object("key").entity(fp.length()-3*5*MB,is).uploadPart(uploadId, 4);上传该文件第15M～文件结尾的数据
+UploadPartResult upResult4=jss.bucket("bucketName").object("key").entity(fp.length()-3*5*MB,is).uploadPart(uploadId, 4);//上传该文件第15M～文件结尾的数据
+jss.bucket("bucketName").object("key").completeMultipartUpload(uploadId, uploadPartList);
 is.close();
 ```
 
