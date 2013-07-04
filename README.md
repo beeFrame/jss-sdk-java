@@ -40,7 +40,7 @@ JingdongStorageService jss = new JingdongStorageService(credential,config);
 ```
 JingdongStorageService对象内部维护一组HTTP连接池，在不使用该对象之前需要调用其shutdown方法关闭连接池，请注意，一旦调用shutdown方法，该对象就不能再次被使用，否则将会抛出异常。
 ```java
-jss.shutdown();
+jss.destory();
 ```
 ###列出所有的Bucket
 ```java
@@ -63,7 +63,7 @@ jss.bucket("bucketname").delete();
 ```java
 jss.bucket("bucketname").object("key").entity(new File("/export/test.txt")).put();
 ```
-超过100M的文件可以使用自动分块上传的接口，按照5M为一块，自动进行分块上传(强烈建议大文件使用该接口，该接口会自动分割文件，开启多线程进行并行上传)
+超过100M的文件可以使用自动分块上传的接口，按照5M为一块，自动进行分块上传(强烈建议大文件使用该接口，该接口会自动分割文件进行断点上传)
 ```java
 jss.bucket(bucketName).object(key).entity(new File("/tmp/bigfile")).multipartPut(false);
 ```
