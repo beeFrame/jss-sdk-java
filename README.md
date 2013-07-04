@@ -172,7 +172,7 @@ UploadPartResult upResult1=jss.bucket("bucketName").object("key").entity(5*MB,is
 UploadPartResult upResult2=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 2);//上传该文件第5M～10M的数据
 UploadPartResult upResult3=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 3);//上传该文件第10M～15M的数据
 UploadPartResult upResult4=jss.bucket("bucketName").object("key").entity(fp.length()-3*5*MB,is).uploadPart(uploadId, 4);上传该文件第15M～文件结尾的数据
-in.close();
+is.close();
 ```
 
 完成Multipart Upload，此时该文件被分4次分块进行上传
