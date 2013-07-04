@@ -63,7 +63,7 @@ jss.bucket("bucketname").delete();
 ```java
 jss.bucket("bucketname").object("key").entity(new File("/export/test.txt")).put();
 ```
-超过100M的文件可以使用自动分块上传的接口，按照5M为一块，自动进行分块上传(强烈建议大文件使用该接口)
+超过100M的文件可以使用自动分块上传的接口，按照5M为一块，自动进行分块上传(强烈建议大文件使用该接口，该接口会自动分割文件，开启多线程进行并行上传)
 ```java
 jss.bucket(bucketName).object(key).entity(new File("/tmp/bigfile")).multipartPut(false);
 ```
@@ -168,19 +168,20 @@ String uploadId=initResult.getUploadId();
 ```java
 File fp = new File("/tmp/bigfile");
 InputStream is = new FileInputStream(fp);
-UploadPartResult upResult1=jss.bucket("bucketName").object("key").entity(1024*1024*5,is).uploadPart(uploadId, 1);//上传0～5M的内容
-UploadPartResult upResult2=jss.bucket("bucketName").object("key").entity(1024*1024*5,is).uploadPart(uploadId, 2);//上传5～10M的内容
-UploadPartResult upResult3=jss.bucket("bucketName").object("key").entity(1024*1024*5,is).uploadPart(uploadId, 3);//上传15～20M的内容
-UploadPartResult upResult4=jss.bucket("bucketName").object("key").entity(fp.length,is).uploadPart(uploadId, 3);//上传15～20M的内容
+UploadPartResult upResult1=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 1);//上传该文件第0～5M数据
+UploadPartResult upResult2=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 2);//上传该文件第5M～10M的数据
+UploadPartResult upResult3=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 3);//上传该文件第10M～15M的数据
+UploadPartResult upResult4=jss.bucket("bucketName").object("key").entity(fp.length()-3*5*MB,is).uploadPart(uploadId, 4);上传该文件第15M～文件结尾的数据
+in.close();
 ```
 
-完成Multipart Upload,完成分块上传后的key的内容是：以上3个文件内容的总和
+完成Multipart Upload，此时该文件被分4次分块进行上传
 ```java
 ArrayList<UploadPartResult>  uploadPartList = new  ArrayList<UploadPartResult>();
 uploadPartList.add(upResult1);
 uploadPartList.add(upResult2);
 uploadPartList.add(upResult3);
-jss.bucket("bucketName").object("key").completeMultipartUpload(uploadId, uploadPartList);
+uploadPartList.add(upResult4);
 ```
 
 放弃Multipart Upload
