@@ -166,6 +166,7 @@ String uploadId=initResult.getUploadId();
 ```
 上传Part
 ```java
+import static com.jcloud.jss.constant.ByteUnit.MB;  //导入MB头文件
 File fp = new File("/tmp/bigfile");
 InputStream is = new FileInputStream(fp);
 UploadPartResult upResult1=jss.bucket("bucketName").object("key").entity(5*MB,is).uploadPart(uploadId, 1);//上传该文件第0～5M数据
@@ -262,8 +263,6 @@ public class Test {
 				System.out.println("BucketName:" + b.getName());
 			}
 			jss.bucket(bucketName).delete();//删除bucket
-		} catch (StorageServerException e) {
-			e.printStackTrace();
 		} catch (StorageClientException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
